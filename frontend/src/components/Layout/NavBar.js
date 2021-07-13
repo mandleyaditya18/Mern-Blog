@@ -37,7 +37,7 @@ const NavBar = () => {
                     </Typography>
                     
                     <Button color="inherit">
-                        <NavLink to="" className={classes.navlink}>HOME</NavLink>
+                        <NavLink to="/home" className={classes.navlink}>HOME</NavLink>
                     </Button>
                     <Button color="inherit">
                         <NavLink to="/category" className={classes.navlink}>CATEGORIES</NavLink>
