@@ -2,10 +2,12 @@ const express = require('express');
 const cors = require('cors');
 const passport = require('passport');
 const User = require('./models/user');
+const Blog = require('./models/blog');
 const LocalStrategy = require('passport-local').Strategy;
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 
 const app = express();
 
@@ -69,20 +71,35 @@ app.post('/login', (req, res, next) => {
     }) (req, res);
 });
 
-app.get('/private', passport.authenticate('jwt', {session: false, failureRedirect: '/'}), (req, res) => {
-    res.json({msg: 'You\'ve reached to the private route'});
-})
+// app.get('/private', passport.authenticate('jwt', {session: false, failureRedirect: '/'}), (req, res) => {
+//     res.json({msg: 'You\'ve reached to the private route'});
+// })
 
 app.get('/', (req, res) => {
     res.json({msg: 'This is the default route of express server'});
 })
 
-app.get('/home', (req, res) => {
-    res.json({msg: 'This is the home route of express server'});
+app.get('/home', async (req, res) => {
+    const blogs = await Blog.find();
+    res.send(blogs);
 })
 
-app.post('/register', (req, res) => {
-    res.json({msg: 'Register successful'});
+app.post('/write', async (req, res) => {
+    const { title, image, blog, category, author } = req.body;
+    try {
+        const newBlog = await Blog.create({ 
+            title: title, 
+            image: image, 
+            blog: blog, 
+            category: category, 
+            author: author 
+        });
+        console.log(newBlog);
+        res.send(newBlog);
+    }
+    catch (error) {
+        res.send(error);
+    }
 })
 
 app.listen(5000, () => {
