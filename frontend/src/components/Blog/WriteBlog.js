@@ -1,6 +1,8 @@
 import { useContext, useRef } from 'react';
 import { Grid, TextField, Button, makeStyles } from "@material-ui/core";
 import AuthContext from '../../store/auth-context';
+import useHttp from '../../hooks/use-http';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     label: {
@@ -15,11 +17,30 @@ const useStyles = makeStyles((theme) => ({
 const WriteBlog = props => {
     const authCtx = useContext(AuthContext);
     const classes = useStyles();
+    const history = useHistory();
+
+    const { sendRequest: uploadBlog, responseData: blogResponse} = useHttp();
 
     const titleRef = useRef();
     const imageRef = useRef();
     const blogRef = useRef();
     const categoryRef = useRef();
+
+    const upload = async (blogData) => {
+        try {
+            await uploadBlog({
+                url: 'http://localhost:5000/write',
+                method: 'post',
+                data: blogData
+            })
+            console.log(blogResponse);
+            history.push('/home');
+        }
+        catch (error) {
+            console.log('Blog Upload Error: ' + error);
+        }
+        
+    }
 
     const submitHandler = (event) => {
         event.preventDefault();
@@ -29,8 +50,8 @@ const WriteBlog = props => {
         const blog = blogRef.current.value;
         const category = categoryRef.current.value;
         const author = authCtx.name;
-        const data = { title, image, blog, category, author };
-        console.log(data);
+        const blogData = { title, image, blog, category, author };
+        upload(blogData);
     }
 
     return (

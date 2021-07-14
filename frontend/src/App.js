@@ -4,6 +4,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import AuthFormLayout from "./components/Auth/AuthFormLayout";
 import AuthContext from "./store/auth-context";
 import WriteBlog from "./components/Blog/WriteBlog";
+import Home from "./components/Layout/Home";
 
 function App() {
   const authCtx = useContext(AuthContext);
@@ -16,7 +17,7 @@ function App() {
           <Redirect to='/home' />
         </Route>
         <Route path='/home'>
-          <h1>Home Page</h1>
+          <Home />
         </Route>
         <Route path='/category' exact>
           <h1>Categories</h1>
